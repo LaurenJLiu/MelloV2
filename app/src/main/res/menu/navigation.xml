@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_current_status"
+        android:icon="@drawable/dashboard_icon_current"
+        android:title=""/>
+
+    <item
+        android:id="@+id/navigation_trends_stats"
+        android:icon="@drawable/dashboard_icon_stats"
+        android:title=""/>
+
+    <item
+        android:id="@+id/navigation_calibration"
+        android:icon="@drawable/dashboard_icon_calibration"
+        android:title=""/>
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/dashboard_icon_settings"
+        android:title="" />
+
+</menu>

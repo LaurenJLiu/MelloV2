@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Mello</string>
+    <string name="title_current_status">CURRENT STATUS</string>
+    <string name="title_trends_stats">TRENDS &amp; STATISTICS</string>
+    <string name="title_calibration">CALIBRATION</string>
+    <string name="title_settings">SETTINGS</string>
+
+    <string name="notificationSwitchKey">Push Notifications</string>
+    <string name="title_activity_splash">SplashActivity</string>
+
+</resources>
