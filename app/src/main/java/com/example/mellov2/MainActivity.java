@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private final int NOTIFICATION_ID = 001;
 
     //read in value from device
-    private int percentBladderFullness = 43;
+    private int percentBladderFullness = 2;
 
     //for the drop animation
     private EditText etPercent;
     private ClipDrawable mImageDrawable;
     private int mLevel = 0;
-    private int fromLevel = 0;
-    private int toLevel = 0;
+    private int fromLevel;
+    private int toLevel;
     public static final int MAX_LEVEL = 100;  //******to be updated with maximum ADC value
     public static final int LEVEL_DIFF = 20;   //minimum ADC value
     public static final int DELAY = 30;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     private Runnable animateDownImage = new Runnable(){
         @Override
         public void run(){
-            doTheDownAnimation(fromLevel,toLevel);
+            doTheDownAnimation(fromLevel, toLevel);
         }
     };
     //=============================================
@@ -131,40 +131,72 @@ public class MainActivity extends AppCompatActivity {
         boolean switch80Value = prefs.getBoolean("switch_status_80", true);
         boolean switch100Value = prefs.getBoolean("switch_status_100", true);
 
-        while(percentBladderFullness < 100) {
-            try{
-                TimeUnit.SECONDS.sleep(5);
-            } catch (InterruptedException e) {
-            }
-
-            percentBladderFullness += 10;
-
-            if (percentBladderFullness > 90) {
-                if (switch100Value == true) {
-                    notification_content = "Your bladder is at 100% fullness";
-                    displayNotification();
-                }
-            } else if (percentBladderFullness > 80) {
-            } else if (percentBladderFullness > 70) {
-                if (switch80Value == true) {
-                    notification_content = "Your bladder is at 80% fullness";
-                    displayNotification();
-                }
-            } else if (percentBladderFullness > 60) {
-            } else if (percentBladderFullness > 50) {
-            } else if (percentBladderFullness > 40) {
-                doTheUpAnimation(20, 40);
-                if (switch50Value == true) {
-                    notification_content = "Your bladder is at 50% fullness";
-                    displayNotification();
-                }
-            } else if (percentBladderFullness > 30) {
-            } else if (percentBladderFullness > 20) {
-            } else if (percentBladderFullness > 10) {
-            } else if (percentBladderFullness > 5) {
-            } else {
-            }
-        }
+//        while(percentBladderFullness < 100) {
+//            try{
+//                TimeUnit.SECONDS.sleep(5);
+//            } catch (InterruptedException e) {
+//            }
+//
+//            percentBladderFullness += 10;
+//
+//            if (percentBladderFullness > 90) {
+//                fromLevel = 90;
+//                toLevel = 100;
+//                animateUpImage.run();
+//                if (switch100Value == true) {
+//                    notification_content = "Your bladder is at 100% fullness";
+//                    displayNotification();
+//                }
+//            } else if (percentBladderFullness > 80) {
+//                fromLevel = 80;
+//                toLevel = 90;
+//                animateUpImage.run();
+//            } else if (percentBladderFullness > 70) {
+//                fromLevel = 70;
+//                toLevel = 80;
+//                animateUpImage.run();
+//                if (switch80Value == true) {
+//                    notification_content = "Your bladder is at 80% fullness";
+//                    displayNotification();
+//                }
+//            } else if (percentBladderFullness > 60) {
+//                fromLevel = 60;
+//                toLevel = 70;
+//                animateUpImage.run();
+//            } else if (percentBladderFullness > 50) {
+//                fromLevel = 50;
+//                toLevel = 60;
+//                animateUpImage.run();
+//            } else if (percentBladderFullness > 40) {
+//                fromLevel = 40;
+//                toLevel = 50;
+//                animateUpImage.run();
+//                if (switch50Value == true) {
+//                    notification_content = "Your bladder is at 50% fullness";
+//                    displayNotification();
+//                }
+//            } else if (percentBladderFullness > 30) {
+//                fromLevel = 30;
+//                toLevel = 40;
+//                animateUpImage.run();
+//            } else if (percentBladderFullness > 20) {
+//                fromLevel = 20;
+//                toLevel = 30;
+//                animateUpImage.run();
+//            } else if (percentBladderFullness > 10) {
+//                fromLevel = 10;
+//                toLevel = 20;
+//                animateUpImage.run();
+//            } else if (percentBladderFullness > 5) {
+//                fromLevel = 0;
+//                toLevel = 10;
+//                animateUpImage.run();
+//            } else {
+//                fromLevel = 40;
+//                toLevel = 100;
+//                animateUpImage.run();
+//            }
+//        }
     }
 
 

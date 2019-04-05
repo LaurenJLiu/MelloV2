@@ -20,13 +20,11 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 try {
                     super.run();
-//                    sleep(2000);
-                } catch (Exception e) {
-
-                } finally {
+                    sleep(1500);
                     Intent i = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
+                } catch (Exception e) {
                 }
             }
         };
