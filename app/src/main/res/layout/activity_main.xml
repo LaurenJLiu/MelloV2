@@ -46,16 +46,18 @@
 
     </FrameLayout>
 
-    <EditText
+    <TextView
         android:id="@+id/etPercent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="40dp"
+        android:layout_marginBottom="10dp"
         android:inputType="number"
+        android:gravity="center"
         android:maxLength="3"
         app:layout_constraintBottom_toTopOf="@id/bladder_full"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/bladder_full"

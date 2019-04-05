@@ -1,8 +1,18 @@
 package com.example.mellov2;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,32 +118,123 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //set up status bar
-        etPercent = (EditText) findViewById(R.id.etPercent);
+        //etPercent = (EditText) findViewById(R.id.etPercent);
         ImageView img = (ImageView) findViewById(R.id.imageView1);
         mImageDrawable = (ClipDrawable) img.getDrawable();
         mImageDrawable.setLevel(0);
+
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean switch50Value = prefs.getBoolean("switch_status_50", true);
+        boolean switch80Value = prefs.getBoolean("switch_status_80", true);
+        boolean switch100Value = prefs.getBoolean("switch_status_100", true);
+
+        while(percentBladderFullness < 100) {
+            try{
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+            }
+
+            percentBladderFullness += 10;
+
+            if (percentBladderFullness > 90) {
+                if (switch100Value == true) {
+                    notification_content = "Your bladder is at 100% fullness";
+                    displayNotification();
+                }
+            } else if (percentBladderFullness > 80) {
+            } else if (percentBladderFullness > 70) {
+                if (switch80Value == true) {
+                    notification_content = "Your bladder is at 80% fullness";
+                    displayNotification();
+                }
+            } else if (percentBladderFullness > 60) {
+            } else if (percentBladderFullness > 50) {
+            } else if (percentBladderFullness > 40) {
+                doTheUpAnimation(20, 40);
+                if (switch50Value == true) {
+                    notification_content = "Your bladder is at 50% fullness";
+                    displayNotification();
+                }
+            } else if (percentBladderFullness > 30) {
+            } else if (percentBladderFullness > 20) {
+            } else if (percentBladderFullness > 10) {
+            } else if (percentBladderFullness > 5) {
+            } else {
+            }
+        }
     }
+
+
+    public TrendsStatsFragment trendsStatsFragment = new TrendsStatsFragment();
+    public CalibrationFragment calibrationFragment = new CalibrationFragment();
+    public SettingsFragment settingsFragment = new SettingsFragment();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
             switch (item.getItemId()) {
                 case R.id.navigation_current_status:
-                    //finish();
+                    if (trendsStatsFragment.isAdded()) {
+                        ft.hide(trendsStatsFragment);
+                    }
+                    if (calibrationFragment.isAdded()) {
+                        ft.hide(calibrationFragment);
+                    }
+                    if (settingsFragment.isAdded()) {
+                        ft.hide(settingsFragment);
+                    }
+                    ft.commit();
                     return true;
                 case R.id.navigation_trends_stats:
-                    getSupportFragmentManager().beginTransaction().add(R.id.main_container,
-                            new TrendsStatsFragment()).commit();
+                    if (!trendsStatsFragment.isAdded()) {
+                        ft.add(R.id.main_container, trendsStatsFragment);
+                    } else {
+                        if (calibrationFragment.isAdded()) {
+                            ft.hide(calibrationFragment);
+                        }
+                        if (settingsFragment.isAdded()) {
+                            ft.hide(settingsFragment);
+                        }
+                        ft.show(trendsStatsFragment);
+                    }
+                    ft.commit();
                     return true;
                 case R.id.navigation_calibration:
-                    getSupportFragmentManager().beginTransaction().add(R.id.main_container,
-                            new CalibrationFragment()).commit();
+                    if (!calibrationFragment.isAdded()) {
+                        ft.add(R.id.main_container, calibrationFragment);
+                    } else {
+                        if (trendsStatsFragment.isAdded()) {
+                            ft.hide(trendsStatsFragment);
+                        }
+                        if (settingsFragment.isAdded()) {
+                            ft.hide(settingsFragment);
+                        }
+                        ft.remove(calibrationFragment);
+                        calibrationFragment = new CalibrationFragment();
+                        ft.add(R.id.main_container, calibrationFragment);
+                    }
+                    ft.commit();
                     return true;
                 case R.id.navigation_settings:
-                    getSupportFragmentManager().beginTransaction().add(R.id.main_container,
-                            new SettingsFragment()).commit();
+                    if (!settingsFragment.isAdded()) {
+                        ft.add(R.id.main_container, settingsFragment);
+                    } else {
+                        if (trendsStatsFragment.isAdded()) {
+                            ft.hide(trendsStatsFragment);
+                        }
+                        if (calibrationFragment.isAdded()) {
+                            ft.hide(calibrationFragment);
+                        }
+                        ft.show(settingsFragment);
+                    }
+                    ft.commit();
                     return true;
             }
             return false;
@@ -256,4 +357,34 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
+    public void displayNotification() {
+        createNotificationChannel();
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
+
+        notificationBuilder.setDefaults(Notification.DEFAULT_ALL)
+                .setSmallIcon(R.drawable.dashboard_icon_current)
+                .setContentTitle(notification_title)
+                .setContentText(notification_content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Mello Notifications";
+            String description = "Bladder Fullness Notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+
+            notificationChannel.setDescription(description);
+
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
 }
